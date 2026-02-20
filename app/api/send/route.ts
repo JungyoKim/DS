@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const API_URL = "http://honamihome.iptime.org:7777/reply";
+const API_URL = "http://14.36.192.223:7777/reply";
 
 export async function POST(request: Request) {
     try {
