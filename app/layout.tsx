@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}` : "https://ds-liart-six.vercel.app"),
   title: "야추 발사기",
   description: "클릭 시 재미있어집니다.",
   openGraph: {

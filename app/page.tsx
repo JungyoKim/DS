@@ -178,21 +178,22 @@ export default function Home() {
 
         {/* 버튼 영역 */}
         <div className="relative group">
-          {/* 배후 글로우 효과 (필터 잔상 문제를 방지하기 위한 별도 레이어) */}
-          <div className="absolute inset-[-20%] bg-brand-purple/20 blur-[60px] rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-500 animate-pulse pointer-events-none" />
+          {/* 배후 글로우 효과 (더 강력하게 조정하여 필터 대체) */}
+          <div className="absolute inset-[-10%] bg-brand-purple/25 blur-[45px] rounded-full opacity-70 group-hover:opacity-100 transition-all duration-500 animate-pulse pointer-events-none" />
 
           <button
-            className="relative z-10 w-48 h-48 md:w-64 md:h-64 flex items-center justify-center transition-all duration-150 active:scale-90 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed outline-none select-none tap-highlight-transparent"
+            className="relative z-10 w-48 h-48 md:w-64 md:h-64 flex items-center justify-center transition-all duration-150 active:scale-90 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed outline-none select-none tap-highlight-transparent overflow-visible"
             onClick={sendTheArt}
             disabled={loading || cooldownLeft > 0}
             aria-label="야추 전송"
           >
+            {/* 실제 이미지에 걸려있던 drop-shadow가 잔상의 주범이므로 제거하고, 필요 시 버튼에 직접 shadow 적용 */}
             <Image
               src="/button.png"
               alt="전송하기"
               width={256}
               height={256}
-              className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(81,0,255,0.4)] transition-all group-hover:drop-shadow-[0_0_35px_rgba(81,0,255,0.6)]"
+              className="w-full h-full object-contain transition-transform duration-300"
               priority
             />
 
