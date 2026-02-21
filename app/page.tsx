@@ -199,17 +199,19 @@ export default function Home() {
           align-items: center;
           justify-content: center;
           transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
-          /* 사각형 프레임 현상을 방지하기 위해 필터를 버튼 외부에서 관리하거나 임계값을 조정함 */
-          filter: drop-shadow(0 0 15px rgba(81,0,255,0.4));
+          outline: none;
+          -webkit-tap-highlight-color: transparent; /* 모바일 터치 시 사각형 회색 배경 제거 */
         }
         .send-btn img {
           width: 100%;
           height: 100%;
           object-fit: contain;
+          /* 필터를 이미지에 직접 적용하여 버튼의 박스 경계선 영향을 받지 않도록 함 */
+          filter: drop-shadow(0 0 20px rgba(81,0,255,0.5));
+          transition: filter 0.2s, transform 0.2s;
         }
-        .send-btn:hover {
-          transform: scale(1.05);
-          filter: drop-shadow(0 0 25px rgba(81,0,255,0.7));
+        .send-btn:hover img {
+          filter: drop-shadow(0 0 30px rgba(81,0,255,0.8));
         }
         .send-btn:active { transform: scale(0.92); }
         .send-btn:disabled {
