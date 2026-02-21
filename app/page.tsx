@@ -195,12 +195,11 @@ export default function Home() {
           cursor: pointer;
           width: 100%;
           height: 100%;
-          border-radius: 50%;
-          overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
-          transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), filter 0.2s;
+          transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
+          /* 사각형 프레임 현상을 방지하기 위해 필터를 버튼 외부에서 관리하거나 임계값을 조정함 */
           filter: drop-shadow(0 0 15px rgba(81,0,255,0.4));
         }
         .send-btn img {
