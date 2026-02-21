@@ -125,7 +125,9 @@ export default function Home() {
         body {
           font-family: 'Noto Sans KR', sans-serif;
           background: radial-gradient(ellipse at center, #1a0050 0%, #0a0020 60%, #050010 100%);
-          min-height: 100vh;
+          height: 100vh;
+          height: 100dvh;
+          overflow: hidden; /* 스크롤 방지 */
         }
 
         .page {
@@ -133,33 +135,34 @@ export default function Home() {
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          min-height: 100vh;
-          gap: 36px;
-          padding: 24px;
+          height: 100vh;
+          height: 100dvh;
+          gap: clamp(20px, 5vh, 48px);
+          padding: 20px;
+          text-align: center;
         }
 
         /* ── 제목 영역 ── */
         .title-block {
-          text-align: center;
+          width: 100%;
         }
         .title-label {
-          font-size: 11px;
+          font-size: clamp(10px, 2vw, 12px);
           font-weight: 700;
           letter-spacing: 0.25em;
           text-transform: uppercase;
           color: #9b72ff;
-          margin-bottom: 8px;
+          margin-bottom: 6px;
         }
         .title-main {
-          font-size: 36px;
+          font-size: clamp(28px, 8vw, 44px);
           font-weight: 900;
           color: #fff;
           letter-spacing: -0.02em;
           line-height: 1.1;
-          text-shadow: 0 0 40px rgba(81,0,255,0.6), 0 0 80px rgba(81,0,255,0.3);
+          text-shadow: 0 0 30px rgba(81,0,255,0.5), 0 0 60px rgba(81,0,255,0.25);
         }
         .title-main span {
-          color: #7c3aed;
           background: linear-gradient(90deg, #5100ff, #a855f7);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -170,16 +173,18 @@ export default function Home() {
         .btn-wrap {
           position: relative;
           display: inline-block;
+          width: clamp(160px, 50vw, 240px);
+          height: clamp(160px, 50vw, 240px);
         }
         .btn-wrap::before {
           content: '';
           position: absolute;
-          inset: -12px;
-          border-radius: 28px;
-          background: radial-gradient(ellipse, rgba(81,0,255,0.35) 0%, transparent 70%);
-          filter: blur(8px);
+          inset: -10%;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(81,0,255,0.3) 0%, transparent 70%);
+          filter: blur(12px);
           transition: opacity 0.3s;
-          opacity: 0;
+          opacity: 0.6;
         }
         .btn-wrap:hover::before { opacity: 1; }
 
@@ -188,35 +193,69 @@ export default function Home() {
           border: none;
           padding: 0;
           cursor: pointer;
-          border-radius: 20px;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
           overflow: hidden;
-          display: block;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1), filter 0.2s;
-          filter: drop-shadow(0 0 18px rgba(81,0,255,0.5));
+          filter: drop-shadow(0 0 15px rgba(81,0,255,0.4));
+        }
+        .send-btn img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
         }
         .send-btn:hover {
-          transform: scale(1.06);
-          filter: drop-shadow(0 0 28px rgba(81,0,255,0.8));
+          transform: scale(1.05);
+          filter: drop-shadow(0 0 25px rgba(81,0,255,0.7));
         }
-        .send-btn:active { transform: scale(0.94); }
+        .send-btn:active { transform: scale(0.92); }
         .send-btn:disabled {
           cursor: not-allowed;
-          opacity: 0.55;
-          transform: scale(0.96);
+          filter: grayscale(0.5) opacity(0.7);
         }
 
+        /* ── 쿨다운 오버레이 ── */
+        .cooldown-overlay {
+          position: absolute;
+          inset: 0;
+          border-radius: 50%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          background: rgba(5,0,16,0.8);
+          backdrop-filter: blur(6px);
+          -webkit-backdrop-filter: blur(6px);
+          border: 1.5px solid rgba(252,165,165,0.2);
+          gap: 2px;
+          pointer-events: none;
+          z-index: 10;
+        }
+        .cooldown-emoji { font-size: clamp(20px, 5vw, 28px); }
+        .cooldown-text { 
+          font-size: clamp(18px, 4vw, 22px); 
+          font-weight: 800; 
+          color: #fca5a5; 
+          letter-spacing: -0.01em; 
+        }
 
         /* ── 토스트 컨테이너 ── */
         .toast-area {
           position: fixed;
-          top: 24px;
+          top: clamp(16px, 4vh, 24px);
           left: 50%;
           transform: translateX(-50%);
           display: flex;
           flex-direction: column;
           align-items: center;
-          gap: 10px;
-          z-index: 999;
+          gap: 8px;
+          z-index: 1000;
+          width: 90%;
+          max-width: 380px;
           pointer-events: none;
         }
         .toast {
@@ -224,49 +263,46 @@ export default function Home() {
           display: flex;
           align-items: center;
           gap: 10px;
-          padding: 14px 18px;
+          padding: 12px 16px;
           border-radius: 14px;
           font-size: 14px;
           font-weight: 600;
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          min-width: 200px;
+          width: 100%;
           animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
           box-shadow: 0 8px 32px rgba(0,0,0,0.4);
         }
-        .toast-icon { font-size: 18px; flex-shrink: 0; }
+        .toast-icon { font-size: 16px; flex-shrink: 0; }
 
         .toast.success {
           background: rgba(16,185,129,0.15);
-          border: 1px solid rgba(16,185,129,0.35);
+          border: 1px solid rgba(16,185,129,0.3);
           color: #6ee7b7;
         }
         .toast.error {
           background: rgba(239,68,68,0.15);
-          border: 1px solid rgba(239,68,68,0.35);
+          border: 1px solid rgba(239,68,68,0.3);
           color: #fca5a5;
         }
         .toast.loading {
           background: rgba(81,0,255,0.15);
-          border: 1px solid rgba(81,0,255,0.35);
+          border: 1px solid rgba(81,0,255,0.3);
           color: #c4b5fd;
         }
         .spinner {
-          width: 18px; height: 18px;
+          width: 16px; height: 16px;
           border: 2px solid rgba(196,181,253,0.3);
           border-top-color: #c4b5fd;
           border-radius: 50%;
           animation: spin 0.8s linear infinite;
-          flex-shrink: 0;
         }
 
         @keyframes slideIn {
-          from { opacity: 0; transform: translateY(-16px) scale(0.92); }
+          from { opacity: 0; transform: translateY(-12px) scale(0.95); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
 
       {/* 토스트 알림 */}
@@ -293,7 +329,7 @@ export default function Home() {
         </div>
 
         {/* 버튼 */}
-        <div className="btn-wrap" style={{ position: "relative" }}>
+        <div className="btn-wrap">
           <button
             className="send-btn"
             onClick={sendTheArt}
@@ -303,30 +339,15 @@ export default function Home() {
             <Image
               src="/button.png"
               alt="전송하기"
-              width={200}
-              height={200}
+              width={240}
+              height={240}
               priority
             />
           </button>
           {cooldownLeft > 0 && (
-            <div style={{
-              position: "absolute",
-              inset: 0,
-              borderRadius: "50%",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              background: "rgba(5,0,16,0.75)",
-              backdropFilter: "blur(8px)",
-              border: "1.5px solid rgba(252,165,165,0.25)",
-              gap: 4,
-              pointerEvents: "none",
-            }}>
-              <span style={{ fontSize: 24 }}>🚫</span>
-              <span style={{ fontSize: 20, fontWeight: 800, color: "#fca5a5", letterSpacing: "-0.01em" }}>
-                {cooldownLeft}초
-              </span>
+            <div className="cooldown-overlay">
+              <span className="cooldown-emoji">🚫</span>
+              <span className="cooldown-text">{cooldownLeft}초</span>
             </div>
           )}
         </div>
