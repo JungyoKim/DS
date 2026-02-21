@@ -117,222 +117,45 @@ export default function Home() {
 
   return (
     <>
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap');
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-          font-family: 'Noto Sans KR', sans-serif;
-          background: radial-gradient(ellipse at center, #1a0050 0%, #0a0020 60%, #050010 100%);
-          height: 100vh;
-          height: 100dvh;
-          overflow: hidden; /* 스크롤 방지 */
-        }
-
-        .page {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          height: 100vh;
-          height: 100dvh;
-          gap: clamp(20px, 5vh, 48px);
-          padding: 20px;
-          text-align: center;
-        }
-
-        /* ── 제목 영역 ── */
-        .title-block {
-          width: 100%;
-        }
-        .title-label {
-          font-size: clamp(10px, 2vw, 12px);
-          font-weight: 700;
-          letter-spacing: 0.25em;
-          text-transform: uppercase;
-          color: #9b72ff;
-          margin-bottom: 6px;
-        }
-        .title-main {
-          font-size: clamp(28px, 8vw, 44px);
-          font-weight: 900;
-          color: #fff;
-          letter-spacing: -0.02em;
-          line-height: 1.1;
-          text-shadow: 0 0 30px rgba(81,0,255,0.5), 0 0 60px rgba(81,0,255,0.25);
-        }
-        .title-main span {
-          background: linear-gradient(90deg, #5100ff, #a855f7);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-        }
-
-        /* ── 버튼 ── */
-        .btn-wrap {
-          position: relative;
-          display: inline-block;
-          width: clamp(160px, 50vw, 240px);
-          height: clamp(160px, 50vw, 240px);
-        }
-        .btn-wrap::before {
-          content: '';
-          position: absolute;
-          inset: -10%;
-          border-radius: 50%;
-          background: radial-gradient(circle, rgba(81,0,255,0.3) 0%, transparent 70%);
-          filter: blur(12px);
-          transition: opacity 0.3s;
-          opacity: 0.6;
-        }
-        .btn-wrap:hover::before { opacity: 1; }
-
-        .send-btn {
-          background: none;
-          border: none;
-          padding: 0;
-          cursor: pointer;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: transform 0.15s cubic-bezier(0.34,1.56,0.64,1);
-          outline: none;
-          -webkit-tap-highlight-color: transparent; /* 모바일 터치 시 사각형 회색 배경 제거 */
-        }
-        .send-btn img {
-          width: 100%;
-          height: 100%;
-          object-fit: contain;
-          /* 필터를 이미지에 직접 적용하여 버튼의 박스 경계선 영향을 받지 않도록 함 */
-          filter: drop-shadow(0 0 20px rgba(81,0,255,0.5));
-          transition: filter 0.2s, transform 0.2s;
-        }
-        .send-btn:hover img {
-          filter: drop-shadow(0 0 30px rgba(81,0,255,0.8));
-        }
-        .send-btn:active { transform: scale(0.92); }
-        .send-btn:disabled {
-          cursor: not-allowed;
-          filter: grayscale(0.5) opacity(0.7);
-        }
-
-        /* ── 쿨다운 오버레이 ── */
-        .cooldown-overlay {
-          position: absolute;
-          inset: 0;
-          border-radius: 50%;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          background: rgba(5,0,16,0.8);
-          backdrop-filter: blur(6px);
-          -webkit-backdrop-filter: blur(6px);
-          border: 1.5px solid rgba(252,165,165,0.2);
-          gap: 2px;
-          pointer-events: none;
-          z-index: 10;
-        }
-        .cooldown-emoji { font-size: clamp(20px, 5vw, 28px); }
-        .cooldown-text { 
-          font-size: clamp(18px, 4vw, 22px); 
-          font-weight: 800; 
-          color: #fca5a5; 
-          letter-spacing: -0.01em; 
-        }
-
-        /* ── 토스트 컨테이너 ── */
-        .toast-area {
-          position: fixed;
-          top: clamp(16px, 4vh, 24px);
-          left: 50%;
-          transform: translateX(-50%);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-          z-index: 1000;
-          width: 90%;
-          max-width: 380px;
-          pointer-events: none;
-        }
-        .toast {
-          pointer-events: auto;
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          padding: 12px 16px;
-          border-radius: 14px;
-          font-size: 14px;
-          font-weight: 600;
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          width: 100%;
-          animation: slideIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.4);
-        }
-        .toast-icon { font-size: 16px; flex-shrink: 0; }
-
-        .toast.success {
-          background: rgba(16,185,129,0.15);
-          border: 1px solid rgba(16,185,129,0.3);
-          color: #6ee7b7;
-        }
-        .toast.error {
-          background: rgba(239,68,68,0.15);
-          border: 1px solid rgba(239,68,68,0.3);
-          color: #fca5a5;
-        }
-        .toast.loading {
-          background: rgba(81,0,255,0.15);
-          border: 1px solid rgba(81,0,255,0.3);
-          color: #c4b5fd;
-        }
-        .spinner {
-          width: 16px; height: 16px;
-          border: 2px solid rgba(196,181,253,0.3);
-          border-top-color: #c4b5fd;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateY(-12px) scale(0.95); }
-          to   { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-      `}</style>
-
       {/* 토스트 알림 */}
-      <div className="toast-area">
+      <div className="fixed top-4 md:top-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50 w-[90%] max-w-[380px] pointer-events-none">
         {toasts.map((t) => (
-          <div key={t.id} className={`toast ${t.type}`} onClick={() => removeToast(t.id)}>
+          <div
+            key={t.id}
+            className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold backdrop-blur-2xl shadow-2xl w-full border animate-in fade-in slide-in-from-top-4 duration-300 ${t.type === "success" ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300" :
+                t.type === "error" ? "bg-red-500/15 border-red-500/30 text-red-300" :
+                  "bg-brand-purple/15 border-brand-purple/30 text-purple-200"
+              }`}
+            onClick={() => removeToast(t.id)}
+          >
             {t.type === "loading" ? (
-              <div className="spinner" />
+              <div className="w-4 h-4 border-2 border-purple-300/30 border-t-purple-300 rounded-full animate-spin" />
             ) : (
-              <span className="toast-icon">{t.type === "success" ? "✅" : "❌"}</span>
+              <span className="text-lg">{t.type === "success" ? "✅" : "❌"}</span>
             )}
             <span>{t.message}</span>
           </div>
         ))}
       </div>
 
-      <div className="page">
-        {/* 제목 */}
-        <div className="title-block">
-          <p className="title-label">Dick Payload System</p>
-          <h1 className="title-main">
-            <span>야추</span> 발사기
+      <main className="flex flex-col items-center justify-center h-[100dvh] gap-8 md:gap-12 px-6 overflow-hidden">
+        {/* 제목 영역 */}
+        <div className="text-center transition-all duration-700 animate-in fade-in zoom-in-95">
+          <p className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-purple-400 mb-2 opacity-80">
+            Dick Payload System
+          </p>
+          <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none drop-shadow-[0_0_15px_rgba(81,0,255,0.3)]">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-purple-400">야추</span> 발사기
           </h1>
         </div>
 
-        {/* 버튼 */}
-        <div className="btn-wrap">
+        {/* 버튼 영역 */}
+        <div className="relative group">
+          {/* 배후 글로우 효과 (필터 잔상 문제를 방지하기 위한 별도 레이어) */}
+          <div className="absolute inset-[-20%] bg-brand-purple/20 blur-[60px] rounded-full opacity-60 group-hover:opacity-100 transition-opacity duration-500 animate-pulse pointer-events-none" />
+
           <button
-            className="send-btn"
+            className="relative z-10 w-48 h-48 md:w-64 md:h-64 flex items-center justify-center transition-all duration-150 active:scale-90 disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed outline-none select-none tap-highlight-transparent"
             onClick={sendTheArt}
             disabled={loading || cooldownLeft > 0}
             aria-label="야추 전송"
@@ -340,19 +163,24 @@ export default function Home() {
             <Image
               src="/button.png"
               alt="전송하기"
-              width={240}
-              height={240}
+              width={256}
+              height={256}
+              className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(81,0,255,0.4)] transition-all group-hover:drop-shadow-[0_0_35px_rgba(81,0,255,0.6)]"
               priority
             />
+
+            {/* 쿨다운 히든 레이어 */}
+            {cooldownLeft > 0 && (
+              <div className="absolute inset-0 z-20 rounded-full bg-brand-bg-end/80 backdrop-blur-md border border-red-500/20 flex flex-col items-center justify-center gap-1 animate-in fade-in duration-300">
+                <span className="text-2xl md:text-3xl">🚫</span>
+                <span className="text-xl md:text-2xl font-black text-red-300 tracking-tight">
+                  {cooldownLeft}초
+                </span>
+              </div>
+            )}
           </button>
-          {cooldownLeft > 0 && (
-            <div className="cooldown-overlay">
-              <span className="cooldown-emoji">🚫</span>
-              <span className="cooldown-text">{cooldownLeft}초</span>
-            </div>
-          )}
         </div>
-      </div>
+      </main>
     </>
   );
 }
