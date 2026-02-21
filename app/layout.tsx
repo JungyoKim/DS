@@ -4,6 +4,17 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "야추 발사기",
   description: "클릭 시 재미있어집니다.",
+  openGraph: {
+    title: "야추 발사기",
+    description: "클릭 시 재미있어집니다.",
+    images: ["/tn.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "야추 발사기",
+    description: "클릭 시 재미있어집니다.",
+    images: ["/tn.png"],
+  },
 };
 
 export default function RootLayout({
