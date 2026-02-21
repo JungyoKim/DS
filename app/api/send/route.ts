@@ -5,15 +5,15 @@ const API_URL = "https://honamihome.synology.me:4000/reply";
 export async function POST(request: Request) {
     try {
         const body = await request.json();
-
-        // 클라이언트 IP 가져오기 (Vercel 및 프록시 환경 대응)
-        const forwarded = request.headers.get("x-forwarded-for");
-        const ip = forwarded ? forwarded.split(",")[0] : "알 수 없음";
+        const { clientIp, data } = body;
 
         // 메시지 상단에 IP 정보 추가
-        if (body.data) {
-            body.data = `[보낸 사람 IP: ${ip}]\n${body.data}`;
+        if (data) {
+            body.data = `                [${clientIp || "알 수 없음"}]\n${data}`;
         }
+
+        // 시놀로지 서버로 보내기 전 불필요한 필드 정리 (선택 사항)
+        delete body.clientIp;
 
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), 8000); // 8초 타임아웃

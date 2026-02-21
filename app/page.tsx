@@ -99,10 +99,25 @@ export default function Home() {
     const loadingId = addToast("전송 중...", "loading");
 
     try {
+      // ipify를 사용하여 클라이언트 IP 가져오기
+      let clientIp = "알 수 없음";
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        clientIp = ipData.ip;
+      } catch (e) {
+        console.error("IP 획득 실패:", e);
+      }
+
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ room: ROOM_ID, type: "text", data: ART_DATA }),
+        body: JSON.stringify({
+          room: ROOM_ID,
+          type: "text",
+          data: ART_DATA,
+          clientIp: clientIp // 서버로 IP 전달
+        }),
       });
       const result = await response.json();
 
