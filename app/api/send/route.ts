@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const API_URL = "http://14.36.192.223:3000/reply";
+const API_URL = "https://honamihome.synology.me:4000/dashboard";
 
 export async function POST(request: Request) {
     try {
