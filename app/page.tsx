@@ -48,7 +48,14 @@ export default function Home() {
 
   function addToast(message: string, type: Toast["type"]) {
     const id = Date.now();
-    setToasts((prev) => [...prev, { id, message, type }]);
+    setToasts((prev) => {
+      const next = [...prev, { id, message, type }];
+      // 3개 이상이면 가장 오래된 것 제거
+      if (next.length > 3) {
+        return next.slice(1);
+      }
+      return next;
+    });
     if (type !== "loading") {
       setTimeout(() => {
         setToasts((prev) => prev.filter((t) => t.id !== id));
@@ -123,8 +130,8 @@ export default function Home() {
           <div
             key={t.id}
             className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-2xl text-sm font-semibold backdrop-blur-2xl shadow-2xl w-full border animate-in fade-in slide-in-from-top-4 duration-300 ${t.type === "success" ? "bg-emerald-500/15 border-emerald-500/30 text-emerald-300" :
-                t.type === "error" ? "bg-red-500/15 border-red-500/30 text-red-300" :
-                  "bg-brand-purple/15 border-brand-purple/30 text-purple-200"
+              t.type === "error" ? "bg-red-500/15 border-red-500/30 text-red-300" :
+                "bg-brand-purple/15 border-brand-purple/30 text-purple-200"
               }`}
             onClick={() => removeToast(t.id)}
           >
@@ -141,9 +148,9 @@ export default function Home() {
       <main className="flex flex-col items-center justify-center h-[100dvh] gap-8 md:gap-12 px-6 overflow-hidden">
         {/* 제목 영역 */}
         <div className="text-center transition-all duration-700 animate-in fade-in zoom-in-95">
-          <p className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-purple-400 mb-2 opacity-80">
+          {/* <p className="text-[10px] md:text-xs font-bold tracking-[0.3em] uppercase text-purple-400 mb-2 opacity-80">
             Dick Payload System
-          </p>
+          </p> */}
           <h1 className="text-4xl md:text-6xl font-black text-white tracking-tighter leading-none drop-shadow-[0_0_15px_rgba(81,0,255,0.3)]">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-purple to-purple-400">야추</span> 발사기
           </h1>
