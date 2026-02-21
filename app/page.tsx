@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 const API_URL = "/api/send";
@@ -43,8 +43,23 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [toasts, setToasts] = useState<Toast[]>([]);
   const [cooldownLeft, setCooldownLeft] = useState(0);
+  const [cachedIp, setCachedIp] = useState("알 수 없음"); // IP 캐싱용 상태
   const sendTimestamps = useRef<number[]>([]);
   const cooldownTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // 페이지 로드 시 IP 한 번만 가져오기
+  useEffect(() => {
+    async function fetchIp() {
+      try {
+        const ipRes = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipRes.json();
+        setCachedIp(ipData.ip);
+      } catch (e) {
+        console.error("IP 획득 실패:", e);
+      }
+    }
+    fetchIp();
+  }, []);
 
   function addToast(message: string, type: Toast["type"]) {
     const id = Date.now();
@@ -99,16 +114,6 @@ export default function Home() {
     const loadingId = addToast("전송 중...", "loading");
 
     try {
-      // ipify를 사용하여 클라이언트 IP 가져오기
-      let clientIp = "알 수 없음";
-      try {
-        const ipRes = await fetch("https://api.ipify.org?format=json");
-        const ipData = await ipRes.json();
-        clientIp = ipData.ip;
-      } catch (e) {
-        console.error("IP 획득 실패:", e);
-      }
-
       const response = await fetch(API_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -116,7 +121,7 @@ export default function Home() {
           room: ROOM_ID,
           type: "text",
           data: ART_DATA,
-          clientIp: clientIp // 서버로 IP 전달
+          clientIp: cachedIp // 저장된 IP 사용
         }),
       });
       const result = await response.json();
